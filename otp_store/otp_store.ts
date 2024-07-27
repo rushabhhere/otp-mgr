@@ -1,7 +1,5 @@
 abstract class OTPStore {
-    client: any;
-
-    constructor(client: any) {
+    constructor(private client: any) {
         this.client = client;
     }
 
