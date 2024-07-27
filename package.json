@@ -34,5 +34,9 @@
     "@types/node": "^20.14.12",
     "tsup": "^8.2.3",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@redis/client": "^1.5.17",
+    "redis": "^4.6.15"
   }
 }
