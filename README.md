@@ -21,7 +21,9 @@ Install with:
 ### How To Use
 
 ```javascript
-const otp = require('otp-mgr');
+const OtpMgr = require("otp-mgr");
+
+const otp = new OtpMgr();
 
 const Purpose = {
   Register: 1,
@@ -31,9 +33,9 @@ const Purpose = {
 };
 
 const users = [
-  { id: 1, email: 'john@gmail.com' },
-  { id: 2, email: 'jane@gmail.com' },
-  { id: 3, email: 'charles@gmail.com' },
+  { id: 1, email: "john@gmail.com" },
+  { id: 2, email: "jane@gmail.com" },
+  { id: 3, email: "charles@gmail.com" },
 ];
 
 const otpForJohnLogin = otp.generate(users[0].id, Purpose.Login);
