@@ -10,7 +10,7 @@
     "build": "tsup index.ts --format cjs,esm --dts",
     "release": "pnpm run build && changeset publish"
   },
-  "repository": {
+  "repository": { 
     "type": "git",
     "url": "https://github.com/rushabhhere/otp-mgr.git"
   },
