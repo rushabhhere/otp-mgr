@@ -1,24 +1,30 @@
 import crypto from 'node:crypto';
+import OTPStore from './otp_store/otp_store';
+import MapStore from './otp_store/map_store';
 
 interface Config {
   purpose: string | number;
   otpLength?: 4 | 5 | 6 | 7 | 8;
   expirationTime: number;
+  store?: OTPStore;
 }
 
 type UserId = string | number;
 
-type GenerateFunction = (userId: UserId) => number;
-type VerifyFunction = (userId: UserId, enteredOtp: number) => boolean;
+type GenerateFunction = (userId: UserId) => Promise<number>;
+type VerifyFunction = (userId: UserId, enteredOtp: number) => Promise<boolean>;
 
 class OTPManager {
+  private store: OTPStore;
+
   constructor(private _config: Config) {
     this._config.otpLength = this._config.otpLength ?? 6;
+    this.store = _config.store ?? new MapStore();
   }
 
-  private _otpMap = new Map<string, [number, Date]>();
+  // private _otpMap = new Map<string, [number, Date]>();
 
-  public generate: GenerateFunction = userId => {
+  public generate: GenerateFunction = async userId => {
     const otpLength = this._config.otpLength as number;
 
     const otp = crypto.randomInt(
@@ -26,28 +32,27 @@ class OTPManager {
       Math.pow(10, otpLength)
     );
 
-    this._otpMap.set(`${this._config.purpose}:${userId}`, [
+    await this.store.set(
+      `${this._config.purpose}:${userId}`,
       otp,
-      new Date(Date.now() + this._config.expirationTime),
-    ]);
+      this._config.expirationTime,
+    );
 
     // clean up once expired
     setTimeout(() => {
-      this._otpMap.delete(`${this._config.purpose}:${userId}`);
+      this.store.del(`${this._config.purpose}:${userId}`);
     }, this._config.expirationTime * 1000);
 
     return otp;
   };
 
-  public verify: VerifyFunction = (userId, enteredOtp) => {
-    const otp = this._otpMap.get(`${this._config.purpose}:${userId}`);
+  public verify: VerifyFunction = async (userId, enteredOtp) => {
+    const otp = await this.store.get(`${this._config.purpose}:${userId}`);
 
     if (!otp) return false;
 
-    const [otpValue, expirationTime] = otp;
-
-    if (otpValue === enteredOtp && expirationTime > new Date()) {
-      this._otpMap.delete(`${userId}:${this._config.purpose}`);
+    if (otp === enteredOtp) {
+      this.store.del(`${this._config.purpose}:${userId}`);
       return true;
     }
 
