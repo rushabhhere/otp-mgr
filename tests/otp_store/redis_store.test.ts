@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 import RedisStore from '../../otp_store/redis_store'
 import { createClient } from '@redis/client'
 
-test('Test OTP Manager with default Map store', async () => {
+test('Test Redis Store', async () => {
     const redisClient = createClient({
         url: 'redis://:1234567890@localhost:6379'
     });
