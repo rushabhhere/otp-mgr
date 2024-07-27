@@ -12,4 +12,6 @@ test('Test Redis Store', async () => {
 
     redisStore.set('test', 123, 60).then(() => { });
     redisStore.get('test').then(value => { expect(value).toBe(123) });
+    redisStore.del('test').then(() => { });
+    redisStore.get('test').then(value => { expect(value).toBe(0) });
 })

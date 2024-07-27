@@ -7,4 +7,6 @@ test('Test Map Store', async () => {
 
     mapStore.set('test', 123, 60).then(() => { });
     mapStore.get('test').then(value => { expect(value).toBe(123) });
+    mapStore.del('test').then(() => { });
+    mapStore.get('test').then(value => { expect(value).toBe(0) });
 })
