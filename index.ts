@@ -1,4 +1,3 @@
-
 type Generate = (userId: string, purpose: number) => number;
 type Verify = (userId: string, purpose: number, enteredOtp: number) => boolean;
 
