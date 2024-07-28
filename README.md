@@ -4,6 +4,8 @@ A simple library for managing OTPs for all your applications. It helps with the 
 
 ## Getting Started
 
+### Prerequisites
+
 These instructions will give you a copy of the project up and running on
 your local machine for development and testing purposes.
 
@@ -16,37 +18,112 @@ Requirements:
 
 Install with:
 
-    npm install otp-mgr
+`npm install otp-mgr`
 
 ### How To Use
 
+Initialize the OTPManager with the required configuration options:
+
 ```javascript
-const otp = require('otp-mgr');
+const OTPManager = require("otp-mgr");
 
-const Purpose = {
-  Register: 1,
-  Login: 2,
-  ResetPassword: 3,
-  CricicalAction: 4,
-};
+// In memory storage
+const otpManager = new OTPManager({
+  // Configuration options
+  purpose: "password-reset", // Purpose of the OTP
+  otpLength: 6, // Length of the OTP
+  expirationTime: 300, // Time to live in seconds
+});
+```
 
-const users = [
-  { id: 1, email: 'john@gmail.com' },
-  { id: 2, email: 'jane@gmail.com' },
-  { id: 3, email: 'charles@gmail.com' },
-];
+Generate an OTP:
 
-const otpForJohnLogin = otp.generate(users[0].id, Purpose.Login);
+```typescript
+const otp: number = await otpManager.generateOTP();
+```
 
-console.log(otpForJohnLogin); // 4 digit OTP
+Verify an OTP:
 
-const isValid = otp.verify(users[0].id, Purpose.Login, otpForJohnLogin);
+```typescript
+const isValid: boolean = await otpManager.verifyOTP(otp);
+```
 
-console.log(isValid); // true
+## All Stores Supported
 
-const isValidJane = otp.verify(users[1].id, Purpose.Login, otpForJohnLogin);
+- In Memory (default)
+- [Redis](#Redis)
+- [Valkey (same method as redis)](#Redis)
+- [Memcached](#Memcached)
 
-console.log(isValidJane); // false
+### Redis
+
+To use Redis as the store, you need to install the `redis` package:
+
+```bash
+npm install redis
+```
+
+Then, initialize a new `RedisStore` object and pass it to the `OTPManager`:
+
+```typescript
+import { RedisStore } from "@otp-mgr/redis";
+
+const redisClient = createClient({
+  url: "redis://<Your Server URL>", // Pass the redis server details
+});
+
+redisClient.connect();
+const redisStore = new RedisStore(redisClient); // Initialize the store
+const otpManager = new OTPManager({
+  purpose: "Login",
+  otpLength: 6,
+  expirationTime: 600,
+  store: redisStore, // Pass the store to the OTPManager
+});
+```
+
+### Memcached
+
+To use Memcached as the store, you need to install the `memcached` package:
+
+```bash
+npm install memcached
+```
+
+Then, initialize a new `MemcachedStore` object and pass it to the `OTPManager`:
+
+```typescript
+import { MemcachedStore } from "@otp-mgr/memcached";
+import OTPManager from "otp-manager";
+
+const memcachedClient = new Memcached(["<Your Server URL>"]); // Pass the memcached server details
+
+const memcachedStore = new MemcachedStore(memcachedClient); // Initialize the store
+
+const otpManager = new OTPManager({
+  purpose: "Login",
+  otpLength: 6,
+  expirationTime: 600,
+  store: memcachedStore, // Pass the store to the OTPManager
+});
+```
+
+## Building your own store
+
+You can build your own store by extending the `OTPStore` abstract class:
+
+```typescript
+abstract class OTPStore {
+  abstract get(key: string): Promise<number>;
+
+  abstract set(
+    key: string,
+    value: number,
+    ttl?: number
+  ): Promise<string | null>;
+
+  abstract del(key: string): Promise<number | null>;
+}
 ```
 
 ## Versioning
