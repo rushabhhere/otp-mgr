@@ -5,8 +5,8 @@ import MapStore from '../../otp_store/map_store'
 test('Test Map Store', async () => {
     const mapStore: MapStore = new MapStore();
 
-    mapStore.set('test', 123, 60).then(() => { });
-    mapStore.get('test').then(value => { expect(value).toBe(123) });
-    mapStore.del('test').then(() => { });
-    mapStore.get('test').then(value => { expect(value).toBe(0) });
+    await mapStore.set('test', 123, 60).then(() => { });
+    await mapStore.get('test').then(value => { expect(value).toBe(123) });
+    await mapStore.del('test').then(() => { });
+    await mapStore.get('test').then(value => { expect(value).toBe(0) });
 })
