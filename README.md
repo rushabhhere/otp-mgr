@@ -18,7 +18,9 @@ Requirements:
 
 Install with:
 
-`npm install otp-mgr`
+```bash
+npm install otp-mgr
+```
 
 ### How To Use
 
