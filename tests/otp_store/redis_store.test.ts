@@ -11,10 +11,7 @@ test('Test Redis Store', async () => {
     const redisStore = new RedisStore(redisClient);
 
     await redisStore.set('test', 123, 60).then(() => { });
-    await redisStore.get('test').then(value => {
-        console.log(value)
-        expect(value).toBe(123)
-    });
+    await redisStore.get('test').then(value => { expect(value).toBe(123) });
     await redisStore.del('test').then(() => { });
     await redisStore.get('test').then(value => { expect(value).toBe(0) });
 })
