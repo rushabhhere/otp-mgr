@@ -7,8 +7,8 @@ test('Test Memcached Store', async () => {
 
     const memcachedStore = new MemcachedStore(memcached);
 
-    memcachedStore.set('test', 123, 60).then(() => { });
-    memcachedStore.get('test').then(value => { expect(value).toBe(123) });
-    memcachedStore.del('test').then(() => { });
-    memcachedStore.get('test').then(value => { expect(value).toBe(0) });
+    await memcachedStore.set('test', 123, 60).then(() => { });
+    await memcachedStore.get('test').then(value => { expect(value).toBe(123) });
+    await memcachedStore.del('test').then(() => { });
+    await memcachedStore.get('test').then(value => { expect(value).toBe(0) });
 })
