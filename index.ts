@@ -35,7 +35,7 @@ class OTPManager {
     await this.store.set(
       `${this._config.purpose}:${userId}`,
       otp,
-      this._config.expirationTime,
+      this._config.expirationTime
     );
 
     return otp;

@@ -9,7 +9,7 @@
     "lint": "tsc",
     "build": "tsup index.ts --format cjs,esm --dts",
     "release": "pnpm run build && changeset publish",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
