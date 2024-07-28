@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
 import OTPManager from '..';
 import { createClient } from '@redis/client';
-import RedisStore from '../otp_store/redis_store';
-import MemcachedStore from '../otp_store/memcached_store';
+import RedisStore from '../stores/redis_store';
+import MemcachedStore from '../stores/memcached_store';
 import Memcached from 'memcached';
 
 test.concurrent(

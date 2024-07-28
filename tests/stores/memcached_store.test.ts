@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import MemcachedStore from '../../otp_store/memcached_store';
+import MemcachedStore from '../../stores/memcached_store';
 import Memcached from 'memcached';
 
 test('Test Memcached Store', async () => {

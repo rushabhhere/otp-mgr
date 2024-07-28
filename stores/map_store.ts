@@ -1,4 +1,4 @@
-import OTPStore from './otp_store';
+import OTPStore from '../utils/store_template';
 
 class MapStore extends OTPStore {
   private _otpMap: Map<string, [number, Date]>;

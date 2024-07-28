@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
-import OTPStore from './otp_store/otp_store';
-import MapStore from './otp_store/map_store';
+import OTPStore from './utils/store_template';
+import MapStore from './stores/map_store';
 
 interface Config {
   purpose: string | number;

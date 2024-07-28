@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import RedisStore from '../../otp_store/redis_store';
-import MapStore from '../../otp_store/map_store';
+import RedisStore from '../../stores/redis_store';
+import MapStore from '../../stores/map_store';
 
 test('Test Map Store', async () => {
   const mapStore: MapStore = new MapStore();
