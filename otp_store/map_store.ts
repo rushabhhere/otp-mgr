@@ -15,6 +15,11 @@ class MapStore extends OTPStore {
     async set(key: string, value: number, ttl?: number): Promise<string | null> {
         try {
             this._otpMap.set(key, [value, new Date(Date.now() + (ttl ?? 0))]);
+
+            setTimeout(() => {
+                this.del(key);
+            }, (ttl ?? 60) * 1000);
+
             return "OK"
         }
         catch (e) {

@@ -38,11 +38,6 @@ class OTPManager {
       this._config.expirationTime,
     );
 
-    // clean up once expired
-    setTimeout(() => {
-      this.store.del(`${this._config.purpose}:${userId}`);
-    }, this._config.expirationTime * 1000);
-
     return otp;
   };
 

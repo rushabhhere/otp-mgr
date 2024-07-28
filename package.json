@@ -39,6 +39,8 @@
   },
   "dependencies": {
     "@redis/client": "^1.5.17",
+    "@types/memcached": "^2.2.10",
+    "memcached": "^2.2.2",
     "redis": "^4.6.15"
   }
 }
