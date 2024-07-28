@@ -20,33 +20,18 @@ Install with:
 
 ### How To Use
 
+Basic Usage:
+
 ```javascript
-const otp = require('otp-mgr');
+const OTPManager = require("otp-mgr");
 
-const Purpose = {
-  Register: 1,
-  Login: 2,
-  ResetPassword: 3,
-  CricicalAction: 4,
-};
-
-const users = [
-  { id: 1, email: 'john@gmail.com' },
-  { id: 2, email: 'jane@gmail.com' },
-  { id: 3, email: 'charles@gmail.com' },
-];
-
-const otpForJohnLogin = otp.generate(users[0].id, Purpose.Login);
-
-console.log(otpForJohnLogin); // 4 digit OTP
-
-const isValid = otp.verify(users[0].id, Purpose.Login, otpForJohnLogin);
-
-console.log(isValid); // true
-
-const isValidJane = otp.verify(users[1].id, Purpose.Login, otpForJohnLogin);
-
-console.log(isValidJane); // false
+const otpMgr = new OTPManager({
+  // Configuration options
+  // Default values are shown below
+  purpose: "password-reset", // Purpose of the OTP
+  otpLength: 6, // Length of the OTP
+  expirationTime: 300, // Time to live in seconds
+});
 ```
 
 ## Versioning
