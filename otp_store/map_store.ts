@@ -19,7 +19,6 @@ class MapStore extends OTPStore {
             setTimeout(() => {
                 this.del(key);
             }, (ttl ?? 60) * 1000);
-
             return "OK"
         }
         catch (e) {

@@ -5,7 +5,7 @@ import RedisStore from '../otp_store/redis_store'
 import MemcachedStore from '../otp_store/memcached_store'
 import Memcached from 'memcached'
 
-test('Test OTP Manager with default Map store', async () => {
+test.concurrent('Test OTP Manager with default Map store', { timeout: 500000 }, async () => {
     const otpManager = new OTPManager({
         purpose: "Login",
         otpLength: 6,
@@ -17,9 +17,9 @@ test('Test OTP Manager with default Map store', async () => {
     expect(await otpManager.verify("TestUser", otp)).toBe(true);
     await new Promise(resolve => setTimeout(resolve, 10000));
     expect(await otpManager.verify("TestUser", otp)).toBe(false);
-}, { timeout: 500000 })
+})
 
-test('Test OTP Manager with Redis store', async () => {
+test.concurrent('Test OTP Manager with Redis store', { timeout: 500000 }, async () => {
     const redisClient = createClient({
         url: 'redis://:1234567890@localhost:6379'
     });
@@ -38,9 +38,30 @@ test('Test OTP Manager with Redis store', async () => {
     expect(await otpManager.verify("TestUser", otp)).toBe(true);
     await new Promise(resolve => setTimeout(resolve, 10000));
     expect(await otpManager.verify("TestUser", otp)).toBe(false);
-}, { timeout: 500000 })
+})
 
-test('Test OTP Manager with Memcached store', async () => {
+test.concurrent('Test OTP Manager with Redis store for Valkey', { timeout: 500000 }, async () => {
+    const valkeyClient = createClient({
+        url: 'redis://:1234567890@localhost:6380',
+    });
+
+    valkeyClient.connect();
+    const redisStore = new RedisStore(valkeyClient);
+    const otpManager = new OTPManager({
+        purpose: "Login",
+        otpLength: 6,
+        expirationTime: 5,
+        store: redisStore,
+    });
+
+    const otp = await otpManager.generate("TestUser");
+    expect(String(otp)).toHaveLength(6)
+    expect(await otpManager.verify("TestUser", otp)).toBe(true);
+    await new Promise(resolve => setTimeout(resolve, 10000));
+    expect(await otpManager.verify("TestUser", otp)).toBe(false);
+})
+
+test.concurrent('Test OTP Manager with Memcached store', { timeout: 500000 }, async () => {
     var memcached = new Memcached(['127.0.0.1:11211'])
 
     const memcachedStore = new MemcachedStore(memcached);
@@ -56,4 +77,4 @@ test('Test OTP Manager with Memcached store', async () => {
     expect(await otpManager.verify("TestUser", otp)).toBe(true);
     await new Promise(resolve => setTimeout(resolve, 10000));
     expect(await otpManager.verify("TestUser", otp)).toBe(false);
-}, { timeout: 500000 })
+})
